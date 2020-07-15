@@ -6,19 +6,17 @@ const blockUser = require('../config/loginBlocker');
 /// DISPLAYING ALL LISTS ---> 
 
 router.get("/", async (req, res) => {
-    // This page shows all the available lists
     let lists = await Lists.find().populate("ownedBy");
     res.render("list/index", { lists });
 })
 
 /// CREATING NEW LISTS --->
 
-router.get("/new", async (req, res) => {
+router.get("/new", blockUser, async (req, res) => {
     res.render("list/new");
 })
 
-router.post("/new", blockUser, async (req, res) => {
-    // This page saves the list
+router.post("/new", async (req, res) => {
     let items = [];
     req.body.item.forEach( (ele, index) => {
         items.push({
@@ -49,9 +47,7 @@ router.post("/help/:id", async (req, res) => {
             return res.redirect("/list");
         }
         
-        // 1. add the helper's id to this particular List and change status
         let list = await Lists.findByIdAndUpdate(req.params.id, { helper: req.user._id, status: 1 });
-        // 2. Add this list to the current helper
         await Users.findByIdAndUpdate(req.user._id, { $push: { registeredLists: list._id }});
         req.flash("success", "Added a new list");
         res.redirect("/list");
@@ -60,7 +56,6 @@ router.post("/help/:id", async (req, res) => {
 })
 
 router.get("/mylists", blockUser, async (req, res) => {
-    console.log("viewing my lists");
     try {
         let user = await Users.findById(req.user._id).
                    populate({
