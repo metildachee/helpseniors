@@ -12,20 +12,25 @@ router.get("/", async (req, res) => {
 
 /// CREATING NEW LISTS --->
 
-router.get("/new", blockUser, async (req, res) => {
-    res.render("list/new");
-})
+router.get("/new", blockUser, async (req, res) => { res.render("list/new"); })
 
 router.post("/new", async (req, res) => {
-    let items = [];
-    req.body.item.forEach( (ele, index) => {
-        items.push({
-            name: ele,
-            qty: req.body.qty[index]
-        });
-    })
+    let items;
+    if (typeof req.body.item == Array) {
+        req.body.item.forEach( (ele, index) => {
+            items.push({
+                name: ele,
+                qty: req.body.qty[index]
+            });
+        })
+    }
+    else {
+        items = {
+            name: req.body.item,
+            qty: req.body.qty
+        };
+    }
     try {
-        // action: add in the current user, see below for ref
         let list = await Lists.create({ items: items, ownedBy: req.user._id });
         await Users.findByIdAndUpdate(req.user._id, { $push: { registeredLists: list._id }});
         res.redirect("/list");
@@ -34,10 +39,8 @@ router.post("/new", async (req, res) => {
 })
 
 /// HELPING ---->
-
 router.post("/help/:id", async (req, res) => {
     try {
-        // check to make sure is not senior
         if (req.user == null) {
             req.flash("error", "You need to sign in to help others");
             return res.redirect("/auth/login");

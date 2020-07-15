@@ -12,7 +12,7 @@ Status: <%= (user.isHelper) ? "Helper" : "Senior" %>
                 <%= item.qty %>
             <% }) %>  
         </div>
-        Owned by: <%= list.ownedBy.name %> 
+        @<%= list.ownedBy.name %> 
         <% if (list.status == 1) { %> 
                 <p>In progress</p>
                 <form action="/list/complete/<%= list._id %>" method="post">   
