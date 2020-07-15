@@ -1,0 +1,30 @@
+<% if (lists.length == 0 || lists == null) { %>
+    <h1>There are no lists available!</h1>
+<% } else { %>
+    <% lists.forEach( list => { %>
+        <div>
+            <% list.items.forEach( item => { %>
+                <%= item.name %>
+                <%= item.qty %>
+            <% }) %>  
+            
+        </div>
+        <% if (list.status == 0) { %>
+            <form action="/list/help/<%= list._id %>" method="post">   
+                <button type="submit">Help</button>
+            </form>
+        <% } else if (list.status == 1) { %> 
+                <p>In progress</p>
+        <% } else if (list.status == 2) { %>
+                <p>Task has been fulfilled</p>
+        <% } %>
+    <% }) %>
+<% } %>
+
+<% if (currentUser != null && currentUser.isSenior == true) { %>
+    <a href="/list/new">Create list</a>
+<% } %>
+
+<% if (currentUser != null) { %>
+    <a href="/list/mylists/">My lists</a>
+<% } %>

@@ -1,0 +1,28 @@
+<form id="form" action="/list/new" method="post">
+    <div id="sub-form">
+        <input type="text" name="item" placeholder="item">
+        <input type="number" name="qty" placeholder="1">
+    </div>
+    <p id="add">Add new item</p>
+    <button type="submit">Create list</button>
+</form>
+
+<script>
+    document.getElementById("add").addEventListener('click', addItem);
+    function addItem(event) {
+        let input = document.createElement("input");
+        let qty = document.createElement("input");
+        let div = document.createElement("div");
+        input.name = "item";
+        input.placeholder = "item";
+
+        qty.type = "number";
+        qty.name = "qty";
+        qty.placeholder = "1";
+       
+        div.appendChild(input);
+        div.appendChild(qty);
+
+        document.getElementById("sub-form").appendChild(div);
+    }
+</script>

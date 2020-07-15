@@ -1,0 +1,24 @@
+{
+  "name": "coronavirus_challenge",
+  "version": "1.0.0",
+  "description": "For the safety of the seniors",
+  "main": "server.js",
+  "scripts": {
+    "test": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.generalassemb.ly/sei-jeddah/full_day_practice_challenge.git"
+  },
+  "keywords": [],
+  "author": "Schnecke Ebere",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^4.0.1",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^8.2.0",
+    "express-session": "^1.17.0",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
+  }
+}
