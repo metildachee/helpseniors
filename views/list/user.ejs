@@ -1,21 +1,29 @@
-<% if (lists.length == 0 || lists == null) { %>
+Name: <%= user.name %>
+Status: <%= (user.isHelper) ? "Helper" : "Senior" %>
+
+<% if (user.registeredLists.length == 0 || user.registeredLists == null) { %>
     <h1>There are no lists available!</h1>
 <% } else { %>
-    <% lists.forEach( list => { %>
+    <h3>This is your registered lists</h3>
+    <% user.registeredLists.forEach( list => { %>
         <div>
             <% list.items.forEach( item => { %>
                 <%= item.name %>
                 <%= item.qty %>
             <% }) %>  
         </div>
-        <% if (list.status == 1) { %>
-            <form action="/list/help/<%= list._id %>" method="post">   
-                <button type="submit">Help</button>
-            </form>
-        <% } else if (list.status == 1) { %> 
+        Owned by: <%= list.ownedBy.name %> 
+        <% if (list.status == 1) { %> 
                 <p>In progress</p>
+                <form action="/list/complete/<%= list._id %>" method="post">   
+                    <button type="submit">Fulfill</button>
+                </form>    
         <% } else if (list.status == 2) { %>
-                <p>Task has been fulfilled</p>
+                <p>Congrats! Task has been fulfilled</p>
         <% } %>
     <% }) %>
+<% } %>
+
+<% if (currentUser != null && currentUser.isSenior == true) { %>
+    <a href="/list/new">Create list</a>
 <% } %>

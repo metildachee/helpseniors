@@ -26,9 +26,9 @@ router.post("/new", async (req, res) => {
         });
     })
     try {
-        let list = await Lists.create({items: items});
         // action: add in the current user, see below for ref
-        await Lists.create({ items: items, ownedBy: req.user._id });
+        let list = await Lists.create({ items: items, ownedBy: req.user._id });
+        await Users.findByIdAndUpdate(req.user._id, { $push: { registeredLists: list._id }});
         res.redirect("/list");
     }
     catch(err) { console.log(err); }
@@ -63,8 +63,8 @@ router.get("/mylists", async (req, res) => {
     console.log("viewing my lists");
     // get all the lists of that particular and render
     try {
-        let lists = await Users.findById(req.user._id).populated("registeredLists");
-        res.render("list/user", lists);
+        let user = await Users.findById(req.user._id).populate("ownedBy registeredLists");
+        res.render("list/user", { user });
     }
     catch(err) { console.log(err); }
 })
