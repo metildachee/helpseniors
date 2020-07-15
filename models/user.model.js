@@ -53,8 +53,6 @@ userSchema.pre("save", function(next) {
 
 userSchema.methods.validPassword = function(password) {
   // Compare is a bcrypt method that will return a boolean,
-  console.log(bcrypt.hashSync(password, 10));
-  console.log(this.password);
   return bcrypt.compareSync(password, this.password);
 };
 

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Lists = require('../models/list.model');
 const Users = require('../models/user.model');
+const blockUser = require('../config/loginBlocker');
 
 /// DISPLAYING ALL LISTS ---> 
 
@@ -16,7 +17,7 @@ router.get("/new", async (req, res) => {
     res.render("list/new");
 })
 
-router.post("/new", async (req, res) => {
+router.post("/new", blockUser, async (req, res) => {
     // This page saves the list
     let items = [];
     req.body.item.forEach( (ele, index) => {
@@ -51,7 +52,6 @@ router.post("/help/:id", async (req, res) => {
         // 1. add the helper's id to this particular List and change status
         let list = await Lists.findByIdAndUpdate(req.params.id, { helper: req.user._id, status: 1 });
         // 2. Add this list to the current helper
-
         await Users.findByIdAndUpdate(req.user._id, { $push: { registeredLists: list._id }});
         req.flash("success", "Added a new list");
         res.redirect("/list");
@@ -59,12 +59,24 @@ router.post("/help/:id", async (req, res) => {
     catch(err) { console.log(err); }
 })
 
-router.get("/mylists", async (req, res) => {
+router.get("/mylists", blockUser, async (req, res) => {
     console.log("viewing my lists");
-    // get all the lists of that particular and render
     try {
-        let user = await Users.findById(req.user._id).populate("ownedBy registeredLists");
+        let user = await Users.findById(req.user._id).
+                   populate({
+                       path: "registeredLists", 
+                       populate: { path: "ownedBy", model: "User"}
+                   });
         res.render("list/user", { user });
+    }
+    catch(err) { console.log(err); }
+})
+
+router.post("/complete/:id", async (req, res) => {
+    try {
+        await Lists.findByIdAndUpdate(req.params.id, { status: 2 });
+        req.flash("success", "You have fulfilled a task");
+        res.redirect("/list");
     }
     catch(err) { console.log(err); }
 })
