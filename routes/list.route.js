@@ -15,20 +15,19 @@ router.get("/", async (req, res) => {
 router.get("/new", blockUser, async (req, res) => { res.render("list/new"); })
 
 router.post("/new", async (req, res) => {
-    let items;
-    if (typeof req.body.item == Array) {
+    console.log("some issues");
+    console.log(typeof req.body.item);
+    let items = [];
+    if (typeof req.body.item == "string" || typeof req.body.item == String) {
+        items.push({ name: req.body.item, qty: req.body.qty });
+    }
+    else {
         req.body.item.forEach( (ele, index) => {
             items.push({
                 name: ele,
                 qty: req.body.qty[index]
             });
         })
-    }
-    else {
-        items = {
-            name: req.body.item,
-            qty: req.body.qty
-        };
     }
     try {
         let list = await Lists.create({ items: items, ownedBy: req.user._id });

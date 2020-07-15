@@ -3,13 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/main.css">
+    <!-- <link rel="stylesheet" href="/css/main.css"> -->
     <link
-    rel="stylesheet"
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-    crossorigin="anonymous"
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+        crossorigin="anonymous"
     />
+    <style>
+        .grid {
+            justify-content: center;
+            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+        }
+        .blocked { height: 10px; }
+        .flip-content { display: none; }
+        .blocked:hover + .flip-content { display: block; }
+
+    </style>
     <title>COVID Helpers</title>
 </head>
 <header>
@@ -26,6 +38,19 @@
             </div>
         <% }) %>
     <% } %>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+        <% if (currentUser != null) { %>
+             <a href="/auth/logout">Logout</a>
+        <% } else if (currentUser == null) { %> 
+            <a href="/auth/login">Login</a>
+        <% } %>
+        <% if (currentUser != null && currentUser.isSenior == true) { %>
+            <a href="/list/new">Create list</a>
+        <% } %>
+        <% if (currentUser != null) { %>
+            <a href="/list/mylists/">My lists</a>
+        <% } %>
+    </nav>
 </header>
 <body>
     <div class="container">

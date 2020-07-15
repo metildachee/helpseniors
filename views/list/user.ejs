@@ -1,27 +1,26 @@
-Name: <%= user.name %>
-Status: <%= (user.isHelper) ? "Helper" : "Senior" %>
+<h6><%= (user.isHelper) ? "Helper" : "Senior" %>: <%= user.name %></h6>
 
 <% if (user.registeredLists.length == 0 || user.registeredLists == null) { %>
-    <h1>There are no lists available!</h1>
+    <h3>There are no lists available!</h3>
 <% } else { %>
-    <h3>This is your registered lists</h3>
+    <h6>You have <%= user.registeredLists.length %> list(s)</h6>
     <% user.registeredLists.forEach( list => { %>
-        <div>
-            <% list.items.forEach( item => { %>
-                <%= item.name %>
-                <%= item.qty %>
-            <% }) %>  
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <% list.items.forEach( item => { %>
+                    <h5 class="card-title"><%= item.name %> x <%= item.qty %></h5>
+                <% }) %>  
+                <h6 class="card-subtitle mb-2 text-muted"></h6>@<%= list.ownedBy.name.toLowerCase(); %></h6> 
+                <% if (list.status == 1) { %> 
+                    <form action="/list/complete/<%= list._id %>" method="post">   
+                        <button class="btn btn-warning" type="submit">Fulfill</button>
+                    </form>    
+                    <% } else if (list.status == 2) { %>
+                    <p class="text-success card-text">Fulfilled</p>
+                <% } %> 
+            </div>
         </div>
-        @<%= list.ownedBy.name %> 
-        <% if (list.status == 1) { %> 
-                <p>In progress</p>
-                <form action="/list/complete/<%= list._id %>" method="post">   
-                    <button type="submit">Fulfill</button>
-                </form>    
-        <% } else if (list.status == 2) { %>
-                <p>Congrats! Task has been fulfilled</p>
-        <% } %>
-    <% }) %>
+    <% }) %> 
 <% } %>
 
 <% if (currentUser != null && currentUser.isSenior == true) { %>

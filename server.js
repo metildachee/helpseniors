@@ -37,12 +37,12 @@ app.use(passport.session());
 app.use(flash());
 
 app.use(function(request, response, next) {
-  // before every route, attach the flash messages and current user to res.locals
   response.locals.alerts = request.flash();
   response.locals.currentUser = request.user;
   next();
 });
 
+app.use("/", require("./routes/list.route"));
 app.use("/auth", require("./routes/auth.route"));
 app.use("/list", require("./routes/list.route"));
 
